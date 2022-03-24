@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>ビンゴ</title>
+        <style>
+            #bingo {
+                text-align: center;
+                margin-right: 20px;
+            }
+            #bingo_display {
+                display: flex;
+                border: solid 1px black;
+                /* flex-wrap: wrap で折り返しを設定することにより
+                    横幅が600を超えた場合、折り返される*/
+                flex-wrap: wrap;
+                width: 600px;
+                margin: 20px auto;
+            }
+            #bingo_seet_display {
+                display: flex;
+                border: solid 1px black;
+                flex-wrap: wrap;
+                width: 300px;
+                margin: 20px auto;
+            }
+            .flex_container {
+                display:flex;
+                flex-wrap: nowrap;
+            }
+
+            .bingo_cell {
+                border: solid 1px black;
+                font-size: 30px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .bingo_seet_cell {
+                border: solid 1px black;
+                font-size: 30px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .active_cell {
+                background-color: orange;
+            }
+            .selected_cell {
+                background-color: lightgray;
+            }
+            .selected_seet_cell {
+                background-color: pink;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ビンゴ</h1>
+        <section class="flex_container">
+            <div id="bingo">
+                <h2>ビンゴマシーン</h2>
+                <div id="bingo_display"></div>
+                <div>
+                    <button id="start_button">スタート</button>
+                    <button id="stop_button">ストップ</button>
+                    <button id="reset_button">リセット</button>
+                </div>
+            </div>
+            <div id="bingo">
+                <h2>ビンゴシート</h2>
+                <div id="bingo_seet_display"></div>
+            </div>
+        </section>
+        <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+        <script>
+            // 表示部分の横幅
+            const DISPLAY_WIDTH = 600;
+            // マス目が一辺にいくつ並ぶか
+            const SIZE = 7;
+            
+            let timer_id;
+            
+            const setCells = () => {
+                // 1マス分の縦横幅を計算 表示部分の横幅を、並ぶ個数で割る
+                const cell_size = DISPLAY_WIDTH / SIZE;
+                // 7 * 7 = 49 マス分、マス目を追加
+                for (let i = 1; i <= SIZE * SIZE; i++) {
+                    // jQuery で要素の生成を行う場合は、
+                    // $関数にタグのカッコで囲まれた要素名を渡せばOK 
+                    // → $('<要素名>'); これによりマス目を表す div 要素を生成
+                    let $bingo_cell = $('<div>').html(i).css({
+                        width : cell_size,
+                        height : cell_size,
+                    }).addClass('bingo_cell');
+                    
+                    // マス目を追加
+                    $('#bingo_display').append($bingo_cell);
+                }
+            };
+            
+            // ビンゴシートの作成
+            
+            // 重複チェック用配列を使う Fisher Yates Shuffleという有名なアルゴリズムもある
+            // 配列randoms をどこかのconst 内で定義すると、そのconst 以外では使用できないため注意
+            let randoms = [];
+            
+            const BINGO_SEET_DISPLAY_WIDTH = 300;
+            const BINGO_SEET_SIZE = 5;
+            const setBingoSeetCells = () => {
+                const bingo_seet_cell_size = BINGO_SEET_DISPLAY_WIDTH / BINGO_SEET_SIZE;
+                
+                for (let j = 1; j <= BINGO_SEET_SIZE * BINGO_SEET_SIZE; j++) {
+                    // 1～49 までの整数をランダムで取得
+                    let random_number = Math.floor(Math.random() * (SIZE * SIZE)) + 1;
+                    
+                    // 配列名.includes(文字) で、文字が配列内に存在する場合は true 存在しない場合は false を返す
+                    if (randoms.includes(random_number) === false) {
+                        // 配列内にインデックスが存在しなければ、そのrandom_number をpush で配列に追加
+                        randoms.push(random_number);
+                        let $bingo_seet_cell = $('<div>').html(random_number).css({
+                            width: bingo_seet_cell_size,
+                            height: bingo_seet_cell_size
+                        }).addClass('bingo_seet_cell');
+                        // ビンゴシートにマス目を追加
+                        $('#bingo_seet_display').append($bingo_seet_cell);
+                    
+                    } else {
+                        // 取得した乱数が配列に存在していたら、jをマイナス1する
+                        j--;
+                    }
+                }
+            };
+            
+            
+            const getRandomCell = () => {
+                // 全てのマス目にbingo_cellというクラスを設定してあるため
+                // 以下のようにすることで、全てのマス目が取得できるが、選択済みのマス目は除く
+                let $bingo_cells = $('.bingo_cell').not('.selected_cell');
+                
+                // ランダムに 0 ~ マス目の個数-1 のいずれかの数値を取得
+                // Math.floor() で小数点以下を切り捨て
+                // Math.rondom() は0以上1未満の値を返す
+                let random_index = Math.floor(Math.random() * $bingo_cells.length);
+                // random_index は 0 ~ 48 のいずれかの数値を取得
+                
+                // ランダムなマス目を取得
+                // eq()は複数のHTML要素（ここでは$bingo_cells）の中から
+                // インデックス番号を指定（random_index）することで特定の要素だけを取得
+                let $random_cell = $bingo_cells.eq(random_index);
+                return $random_cell;
+            };
+            
+            
+            const startBingo = () => {
+                // 現在着色されているマス目を解除
+                $('.active_cell').removeClass('active_cell');
+                // ランダムにマス目を取得
+                let $random_cell = getRandomCell();
+                // getRandomCell メソッドで取得したランダムなマス目に
+                // .addClass でactive_cell クラスを付与
+                $random_cell.addClass('active_cell');
+                // 200ミリ秒後に再度実施
+                timer_id = setTimeout(startBingo, 200);
+            };
+            
+            const hasRest = () => {
+                // .selected_cell されていないマス目が0より大きい（存在する）場合true を返す
+                return $('.bingo_cell').not('.selected_cell').length > 0;
+            };
+            
+            const stopBingo = () => {
+                // ランダム選択を停止
+                clearInterval(timer_id);
+                // selected_number はストップボタンを押して選択されたマス目のHTMLを表す
+                // 残りのマス目があるときのみスタートボタンを活性化
+                if (hasRest() === true) {
+                    // スタートボタンを活性化
+                    $('#start_button').prop('disabled', false);
+                }
+                // ストップボタンを非活性化
+                $('#stop_button').prop('disabled', true);
+
+                // ビンゴシートに該当番号があった場合マス目に色付け
+                // lastNumber にビンゴマシーンで出た最新のマス目を代入
+                let lastNumber = $('.active_cell').html();
+                // .html() で取得した文字列の文字列型は「文字列」になる。
+                console.log(lastNumber);
+                // numbers.push(lastNumber());
+                
+                // 現在の着色を解除して、選択中のマス目に色付け
+                $('.active_cell').removeClass('active_cell').addClass('selected_cell');
+                
+                // ビンゴマシーンのマス目がビンゴシートにあるかどうかの条件分岐
+                
+                // 配列名.includes(文字) で、文字が配列内に存在する場合は true 存在しない場合は false を返す
+                // ただし！！型まで一致していないといけない。
+                // 上述のとおり、lastNumber の文字列型は、数字だが文字列のため（ 1 ではなく '1' ）falseしか返さない
+                // よって今回は以下のif文は使えない
+                // if (randoms.includes(lastNumber) === true) {
+                    // $('要素:contains(文字)') で、指定した文字を持っている要素を取得し、その要素にスタイルをあてることができる。
+                    // :contains() のパラメタに変数を指定したいときは('+ 変数名 +')
+                    // ただし！！ :contains() は「含む」のため、1の場合は21、11も含んでしまう そのため今回は以下は使わない。
+                    // $(".bingo_seet_cell:contains('"lastNumber"')").addClass('selected_seet_cell');
+                    
+                    for (i = 0; i <= 24; i++) {
+                        let num = $(".bingo_seet_cell").eq(i).html();
+                        // lastNumber と .eq()の数値が一致したら、そのセルにaddClass
+                        if (lastNumber === num) {
+                            $(".bingo_seet_cell").eq(i).addClass('selected_seet_cell');
+                        }
+                    }
+                };
+                // html()で追加した要素はすべて「文字列」として追加される
+                // lastNumberは「数値」のため、一致するかどうかを確かめるなら
+                // 文字列型をどちらかに統一させなければならない
+            // };
+            
+            // マス目をセット
+            setCells();
+            setBingoSeetCells();
+            
+            $('#start_button').on('click', () => {
+                startBingo();
+                // ストップボタンを活性化
+                $('#stop_button').prop('disabled', false);
+                // スタートボタンを不活性化
+                $('#start_button').prop('disabled', true);
+            });
+            
+            $('#stop_button').prop('disabled', true);
+            
+            $('#stop_button').on('click', () => {
+                stopBingo();
+            });
+            
+            $('#reset_button').on('click', () => {
+                stopBingo();
+                $('.selected_cell').removeClass('selected_cell');
+                // ビンゴシートの色付けを解除
+                $('.bingo_seet_cell').removeClass('selected_seet_cell');
+                $('#start_button').prop('disabled', false);
+                $('#stop_button').prop('disabled', true);
+            });
+        </script>
+    </body>
+</html>
