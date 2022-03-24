@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>カウントダウンタイマー</title>
+        <style>
+            #timer {
+                background-color: gray;
+                padding: 10px;
+                width: 300px;
+                text-align: center;
+                border-radius: 10px;
+            }
+            
+            #timer_display {
+                background-color: lightgray;
+                padding: 3px;
+                border-radius: 10px;
+                font-size: 24px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="heading">カウントダウンタイマー</h1>
+        <div id="timer">
+            <p id="timer_display">03:00</p>
+            <div>
+                <button id="start_button">スタート</button>
+                <button id="stop_button" disabled>ストップ</button>
+                <button id="reset_button">リセット</button>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+        <script>
+            let count = 180;
+            // タイマーID
+            let timer_id;
+            
+            const display_timer = (count) => {
+                // 分と秒で表示できるように変換
+                // 残りの分数は、60秒で残り秒数を割り端数を切り捨てる
+                let minute = Math.floor(count / 60);
+                
+                // 2分5秒ならば「2:5」でなく「02:05」と表示されるよう
+                // 0埋め　と呼ばれる処理をおこなう。
+                // 1．数値の左に埋めるための0をつける
+                // 2．右から必要な桁数だけ切り取る
+                minute = ('0' + minute).slice(-2);
+                
+                // 残りの秒数は、残りの秒数を60で割った余り
+                let second = count % 60;
+                // second も minute と同様に0埋め処理
+                second = ('0' + second).slice(-2);
+                
+                // minute と second を元にして、
+                // 「分数：秒数：という文字列を作る
+                let time = `${minute}:${second}`;
+                
+                // 現在の残り時間を画面に表示 htmlを「time」に書き換え
+                $('#timer_display').html(time);
+            };
+            
+            const count_down = () => {
+                // カウントを減らす
+                count--;
+                if (count > 0) {
+                    display_timer(count);
+                    // 次のカウントダウンを1秒後に行う
+                    timer_id = setTimeout(count_down, 1000);
+                    // console.log(`現在のタイマーID: ${timer_id}`);
+                } else {
+                    // タイムアップ表示
+                    $('#timer_display').html('Time UP!!');
+                }
+            };
+            
+            
+            const stop_timer = () => {
+                // カウントダウンをストップ
+                clearTimeout(timer_id);
+                // console.log(`タイマーID: ${timer_id} をキャンセルしました。`);
+            }
+            
+               
+            $('#start_button').on('click', () => {
+                // 1秒後にカウントダウンを開始
+                timer_id = setTimeout(count_down, 1000);
+                // propメソッドで、該当の要素の該当のプロパティを取得、設定
+                // ボタンを一度しか押せないようにする
+                $('#start_button').prop('disabled', true);
+                // スタートボタンを押すとストップボタンの無効化が解除
+                $('#stop_button').prop('disabled', false);
+            });
+            
+            $('#stop_button').on('click', stop_timer);
+            
+            $('#reset_button').on('click', () => {
+                stop_timer();
+                count = 180;
+                display_timer(count);
+                $('#start_button').prop('disabled', false);
+            }); 
+              
+        </script>
+    </body>
+</html>
