@@ -1,0 +1,106 @@
+.modal01,
+.modal02,
+.modal03,
+.modal04 {
+    display: none;
+}
+
+/* modalで表示される画像をmodal内の中央に表示したい */
+/* デベロッパーツールを見て、div.modaal-containerあたりが怪しい気はする */
+/* 画像img　の width　を広げるという選択肢もある */
+
+div .modaal-container {
+    width: 865px;
+}
+
+.share-button01,
+.share-button02,
+.share-button03,
+.share-button04 {
+    background-image: url(images/account-login-2x.png);
+    background-repeat: no-repeat;
+    background-position: 5px;
+    padding-left: 25px;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.logo {
+    margin: 10px 0;
+}
+
+.carousel {
+    width: 100%;
+    margin: 0 0;
+}
+.carousel img {
+    width: 100%;
+}
+/* クラス名を二つ重ねることで優先度を上げて、slickのデフォルト設定を上書きできる */
+.carousel .slick-prev:before,
+.carousel .slick-next:before {
+    color: black;
+}
+/* z-indexを使うと position:relation,absolute,flex などで要素を指定することで
+　要素間の表示順番の優先順位を設定することができる */
+.carousel .slick-prev {
+    left: 25px;
+    z-index: 100;
+}
+.carousel .slick-next {
+    right: 25px;
+}
+
+main {
+    padding: 5px;
+}
+.container-title {
+    display: flex;
+    border-bottom: 2px solid #80808052;
+}
+.title-icon {
+    padding-top: 3px;
+    padding-right: 5px;
+    weight: 20px;
+    height: 20px;
+}
+.title {
+    margin: 0;
+    font-size: 20px;
+    flex: 1;
+    color: #250d00;
+}
+
+.new-recipe {
+    width: 85%;
+    margin: 20px auto;
+}
+/* 画像間の間隔が微妙 調整がうまくきかない*/
+.recipe-container {
+    display: flex;
+/* ここにjustify-content: space-around をかけたい*/
+/* slickかmodaalのデフォルトでcenterがかかっている？ */
+}
+/* figureはデフォルトでマージンが設定されている */
+.recipe-container figure {
+    margin: 15px;
+}
+/* max-width: 100% height: auto によってimgが枠より小さいときは標準サイズに
+   imgが枠より大きいときは枠に合わせたサイズに 画像のはみだしをふせげる*/
+.recipe-container img {
+    max-width: 100%;
+    height: auto;
+    font-size: 80%;
+}
+.recipe-container figcaption {
+    text-align: center;
+}
+footer {
+    border-top: 2px solid #80808033;
+    text-align: center;
+    color: #544a47;
+}

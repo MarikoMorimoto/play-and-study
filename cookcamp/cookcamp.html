@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>CookCamp</title>
+        <!-- 自分のCSSを後に読み込むと下のstylesheetの別の設定が読み込まれなくなる可能性がある -->
+        <!-- CSSの適用優先度は上から順 -->
+        <link rel="stylesheet" href="cookcamp.css">
+        <!-- slick CSS CDN -->
+        <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+        <!-- modaal CDN -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css" />
+    </head>
+    
+    <body>
+        <header>
+            <h1><a href="#"><img class="logo" src="images/logo.png" alt="cookcamp"></a></h1>
+        </header>
+        
+        <div class="carousel">
+            <img src="images/key_visual.jpg" alt="key_visual">
+            <img src="images/key_visual2.jpg" alt="key_visual2">
+            <img src="images/key_visual3.jpg" alt="key_visual3">
+        </div>
+        
+        <main>
+            <div class="container-title">
+                <img class="title-icon" src="images/icon.png" alt="icon">
+                <h2 class="title">新着レシピ</h2>
+            </div>
+            
+            <section class="new-recipe">
+                <div class="recipe-container">
+                    <figure class="show01"><a href="#"><img src="images/image01.jpg" alt="image01"></a>
+                    <figcaption>季節の色どり前菜</figcaption></figure>
+                    <figure class="show02"><a href="#"><img src="images/image02.jpg" alt="image02"></a>
+                    <figcaption>簡単野菜スープ</figcaption></figure>
+                    <figure class="show03"><a href="#"><img src="images/image03.jpg" alt="image03"></a>
+                    <figcaption>ヘルシー米粉パン</figcaption></figure>
+                    <figure class="show04"><a href="#"><img src="images/image04.jpg" alt="image04"></a>
+                    <figcaption>ぷりぷりエビ料理</figcaption></figure>
+                </div>
+            </section>
+            
+            <div class="modal01">
+                <img src="images/image08.jpg" alt="季節の色どり前菜">
+                <p>
+                    様々な食材を使用し作り上げた色とりどりの前菜はテーブルをカラフルに彩ります♪
+                </p>
+                <button class="share-button01">シェア</button>
+            </div>
+            <div class="modal02">
+                <img src="images/image09.jpg" alt="簡単野菜スープ">
+                <p>
+                    柔らかく蒸したあとはホイッパーで混ぜるだけの簡単レシピです♪かぼちゃは、ビタミンやミネラルが豊富なので美容や冷え性に良いですよ♪
+                </p>
+                <button class="share-button02">シェア</button>
+            </div>
+            <div class="modal03">
+                <img src="images/image10.jpg" alt="ヘルシー米粉パン">
+                <p>
+                    米粉を使ったさっくりとした軽い食感のパンです♪米粉は日本の主食のお米で作られており、ヘルシーで口当たりも良いですよ♪
+                </p>
+                <button class="share-button03">シェア</button>
+            </div>
+            <div class="modal04">
+                <img src="images/image11.jpg" alt="ぷりぷりエビ料理">
+                <p>
+                    エビがサラダやスープ、ごはんなどに入っていると、テンションが上がりますよね♪ただ、エビは意外に調理が難しいという声も…。実はあるテクニックを使うだけでエビがプリップリに仕上がっちゃうんです♪
+                </p>
+                <button class="share-button04">シェア</button>
+            </div>
+        </main>
+        
+        <footer>
+            <p class="copyright"><small>Copyright &copy; CodeCamp All Rights Reserved.</small></p>
+        </footer>
+         <!-- jQuery CDN -->
+         <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+                 integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+         <!-- slick と Modaal はjQueryのプラグインのため、jQuery CDNよりもあとに指定する -->
+         <!-- slick js CDN -->
+         <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"
+                 integrity="sha256-DHF4zGyjT7GOMPBwpeehwoey18z8uiz98G4PRu2lV0A=" crossorigin="anonymous"></script>
+         <!-- Modaal js CDN -->
+         <script src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"
+                 integrity="sha256-e8kfivdhut3LQd71YXKqOdkWAG1JKiOs2hqYJTe0uTk=" crossorigin="anonymous"></script>
+         <!-- HTML5はデフォルトでtype="text/javascript であるため省略可 -->
+         <script type="text/javascript"></script>
+         <script src="cookcamp.js">
+             
+             
+             
+         </script>
+    </body>
+</html>
